@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Waitstaff Helper</string>
+    <string name="holding_food">Holding Food</string>
+    <string name="loading_data">Loading Data...</string>
+    <string name="continueOnToNextScreen">Continue</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+</resources>
