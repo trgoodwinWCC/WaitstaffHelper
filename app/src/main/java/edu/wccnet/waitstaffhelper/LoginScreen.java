@@ -1,14 +1,28 @@
 package edu.wccnet.waitstaffhelper;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.text.TextUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class LoginScreen extends AppCompatActivity {
 
@@ -31,6 +45,8 @@ public class LoginScreen extends AppCompatActivity {
                 String password = editPassword.getText().toString();
                 if (!TextUtils.isEmpty(username)&&!TextUtils.isEmpty(password)) {
                     Toast.makeText(LoginScreen.this, "Logged in with:\nUsername:"+username+"\nPassword:"+password, Toast.LENGTH_SHORT).show();
+                    // async here
+                    // pass the activity context, username, and password into the async and do the calc there, then display a toast with info regarding login.
                 }
                 else {
                     Toast.makeText(LoginScreen.this, "Username and Password are required", Toast.LENGTH_SHORT).show();
@@ -61,6 +77,59 @@ public class LoginScreen extends AppCompatActivity {
                 }
             }
         });
+
+    }
+    //TODO: 3/2/2018 modify for password retrieval and display a message
+    private class RetrieveUserAndPass extends AsyncTask<String, Void, String> {
+        private TextView textView;
+        // make  the following be instantiated by the constructor.
+        private String usernameToCheck;
+        private String passwordToCheck;
+        private Context toastContext;
+        // the following will be retrieved from the server:
+        private String foundPassword;
+        private String foundUsername;
+
+        public RetrieveUserAndPass(TextView textView) {
+            this.textView=textView;
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String version = "UNKNOWN";
+            try {
+                URL url = new URL(urls[0]);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                InputStream stream = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
+                StringBuilder builder = new StringBuilder();
+
+                String inputString;
+                while ((inputString = bufferedReader.readLine()) != null) {
+                    builder.append(inputString);
+                }
+
+                JSONObject topLevel = new JSONObject(builder.toString());
+                JSONObject userLevel = topLevel.getJSONObject("user");
+
+                Log.i(TAG,"getString('username') returns : "+userLevel.getString("username"));
+                Log.i(TAG,"getString('password') returns : "+userLevel.getString("password"));
+
+
+                version = "Version "+userLevel.getString("version");
+
+                urlConnection.disconnect();
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            return version;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            textView.setText(result);
+        }
 
     }
 }
