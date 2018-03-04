@@ -44,9 +44,11 @@ public class LoginScreen extends AppCompatActivity {
                 EditText editPassword=(EditText)findViewById(R.id.login_screen_et_password);
                 String password = editPassword.getText().toString();
                 if (!TextUtils.isEmpty(username)&&!TextUtils.isEmpty(password)) {
-                    Toast.makeText(LoginScreen.this, "Logged in with:\nUsername:"+username+"\nPassword:"+password, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LoginScreen.this, "Logged in with:\nUsername:"+username+"\nPassword:"+password, Toast.LENGTH_SHORT).show();
                     // async here
                     // pass the activity context, username, and password into the async and do the calc there, then display a toast with info regarding login.
+                    RetrieveUserAndPass task = new RetrieveUserAndPass(username,password);
+                    task.execute(new String[] { "http://api.jsonbin.io/b/5a84a257a67185097468daa2" });
                 }
                 else {
                     Toast.makeText(LoginScreen.this, "Username and Password are required", Toast.LENGTH_SHORT).show();
@@ -81,22 +83,21 @@ public class LoginScreen extends AppCompatActivity {
     }
     //TODO: 3/2/2018 modify for password retrieval and display a message
     private class RetrieveUserAndPass extends AsyncTask<String, Void, String> {
-        private TextView textView;
         // make  the following be instantiated by the constructor.
         private String usernameToCheck;
         private String passwordToCheck;
-        private Context toastContext;
         // the following will be retrieved from the server:
         private String foundPassword;
         private String foundUsername;
 
-        public RetrieveUserAndPass(TextView textView) {
-            this.textView=textView;
+        public RetrieveUserAndPass(String usernameToCheck,String passwordToCheck) {
+            this.usernameToCheck=usernameToCheck;
+            this.passwordToCheck=passwordToCheck;
         }
 
         @Override
         protected String doInBackground(String... urls) {
-            String version = "UNKNOWN";
+            String loginMessage = "ERROR";
             try {
                 URL url = new URL(urls[0]);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -116,19 +117,29 @@ public class LoginScreen extends AppCompatActivity {
                 Log.i(TAG,"getString('username') returns : "+userLevel.getString("username"));
                 Log.i(TAG,"getString('password') returns : "+userLevel.getString("password"));
 
-
-                version = "Version "+userLevel.getString("version");
+                userLevel.isNull("username");
+                foundUsername = userLevel.getString("username");
+                foundPassword = userLevel.getString("password");
+                // foundPassword = (userLevel.getString("password").isEmpty() ? userLevel.getString("password") : null);
+                //version = "Version "+userLevel.getString("version");
 
                 urlConnection.disconnect();
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            return version;
+
+            if (foundUsername.equals(usernameToCheck)&&foundPassword.equals(passwordToCheck)) {
+                loginMessage = "Logged in with:\nUsername:"+usernameToCheck+"\nPassword:"+foundPassword;
+            }
+            else {
+                loginMessage = "Username or password is incorrect";
+            }
+            return loginMessage;
         }
 
         @Override
         protected void onPostExecute(String result) {
-            textView.setText(result);
+            Toast.makeText(LoginScreen.this, result, Toast.LENGTH_SHORT).show();
         }
 
     }
