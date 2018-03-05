@@ -31,7 +31,7 @@ public class SplashScreen extends AppCompatActivity {
 
         final TextView versionText = findViewById(R.id.versionText);
         RetrieveVersion task = new RetrieveVersion(versionText);
-        task.execute(new String[] { "http://api.jsonbin.io/b/5a84ada773fb541c61a4d0d5" });
+        task.execute("http://api.jsonbin.io/b/5a84ada773fb541c61a4d0d5");
 
         Button continueButton=(Button)findViewById(R.id.continueButton);
         continueButton.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +71,7 @@ public class SplashScreen extends AppCompatActivity {
                 JSONObject topLevel = new JSONObject(builder.toString());
                 JSONObject settingsLevel = topLevel.getJSONObject("settings");
 
-                Log.i(TAG,"getString'version' is: "+settingsLevel.getString("version"));
+                Log.i(TAG,"getString('version') returns : "+settingsLevel.getString("version"));
                 version = "Version "+settingsLevel.getString("version");
 
                 urlConnection.disconnect();
