@@ -1,6 +1,5 @@
 package edu.wccnet.waitstaffhelper;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.text.TextUtils;
 
@@ -44,11 +42,8 @@ public class LoginScreen extends AppCompatActivity {
                 EditText editPassword=(EditText)findViewById(R.id.login_screen_et_password);
                 String password = editPassword.getText().toString();
                 if (!TextUtils.isEmpty(username)&&!TextUtils.isEmpty(password)) {
-                    //Toast.makeText(LoginScreen.this, "Logged in with:\nUsername:"+username+"\nPassword:"+password, Toast.LENGTH_SHORT).show();
-                    // async here
-                    // pass the activity context, username, and password into the async and do the calc there, then display a toast with info regarding login.
                     RetrieveUserAndPass task = new RetrieveUserAndPass(username,password);
-                    task.execute(new String[] { "http://api.jsonbin.io/b/5a84a257a67185097468daa2" });
+                    task.execute("http://api.jsonbin.io/b/5a84a257a67185097468daa2");
                 }
                 else {
                     Toast.makeText(LoginScreen.this, "Username and Password are required", Toast.LENGTH_SHORT).show();
@@ -81,12 +76,11 @@ public class LoginScreen extends AppCompatActivity {
         });
 
     }
-    //TODO: 3/2/2018 modify for password retrieval and display a message
+
     private class RetrieveUserAndPass extends AsyncTask<String, Void, String> {
-        // make  the following be instantiated by the constructor.
+
         private String usernameToCheck;
         private String passwordToCheck;
-        // the following will be retrieved from the server:
         private String foundPassword;
         private String foundUsername;
 
@@ -97,7 +91,7 @@ public class LoginScreen extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... urls) {
-            String loginMessage = "ERROR";
+            String loginMessage="ERROR";
             try {
                 URL url = new URL(urls[0]);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -117,18 +111,16 @@ public class LoginScreen extends AppCompatActivity {
                 Log.i(TAG,"getString('username') returns : "+userLevel.getString("username"));
                 Log.i(TAG,"getString('password') returns : "+userLevel.getString("password"));
 
-                userLevel.isNull("username");
+
                 foundUsername = userLevel.getString("username");
                 foundPassword = userLevel.getString("password");
-                // foundPassword = (userLevel.getString("password").isEmpty() ? userLevel.getString("password") : null);
-                //version = "Version "+userLevel.getString("version");
 
                 urlConnection.disconnect();
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-
-            if (foundUsername.equals(usernameToCheck)&&foundPassword.equals(passwordToCheck)) {
+            // the following is a bit long but shouldn't fail if json retrieval fails, instead it should run the else block
+            if (android.text.TextUtils.equals(foundUsername, usernameToCheck) && android.text.TextUtils.equals(foundPassword, passwordToCheck)) {
                 loginMessage = "Logged in with:\nUsername:"+usernameToCheck+"\nPassword:"+foundPassword;
             }
             else {

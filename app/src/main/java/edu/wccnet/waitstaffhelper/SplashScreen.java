@@ -1,6 +1,7 @@
 package edu.wccnet.waitstaffhelper;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +21,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -32,6 +36,13 @@ public class SplashScreen extends AppCompatActivity {
         final TextView versionText = findViewById(R.id.versionText);
         RetrieveVersion task = new RetrieveVersion(versionText);
         task.execute("http://api.jsonbin.io/b/5a84ada773fb541c61a4d0d5");
+        getMenuItems task2 = new getMenuItems("Breakfast","Lunch","Dinner","Dessert");
+        task2.execute(new String[]{
+                "http://api.jsonbin.io/b/5a9cb434a121bc097fe799ef",
+                "http://api.jsonbin.io/b/5a9cb489859c4e1c4d5ddb56",
+                "http://api.jsonbin.io/b/5a9cb4f0a67185097469e68d",
+                "http://api.jsonbin.io/b/5a9cb528a67185097469e691"
+        });
 
         Button continueButton=(Button)findViewById(R.id.continueButton);
         continueButton.setOnClickListener(new View.OnClickListener() {
@@ -86,5 +97,67 @@ public class SplashScreen extends AppCompatActivity {
             textView.setText(result);
         }
 
+    }
+
+    private class getMenuItems extends AsyncTask<String, Void, String> {
+        private ArrayList<String> listOfMenuItems = new ArrayList<>();
+        private int positionOfItems;
+
+        public getMenuItems(String... menuItemNames) {
+            listOfMenuItems.addAll(Arrays.asList(menuItemNames));
+            positionOfItems =0;
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String itemsToSave;
+            try {
+
+                for(String stringUrl : urls) {
+                    if(listOfMenuItems.size()<urls.length) {
+                        return "Error, names inputted do not match urls inputted";
+                    }
+                    URL url = new URL(stringUrl);
+                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                    InputStream stream = new BufferedInputStream(urlConnection.getInputStream());
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
+                    StringBuilder builder = new StringBuilder();
+
+                    String inputString;
+                    while ((inputString = bufferedReader.readLine()) != null) {
+                        builder.append(inputString);
+                    }
+
+                    JSONObject topLevel = new JSONObject(builder.toString());
+                    JSONArray testArr = topLevel.getJSONArray("items");
+
+                    StringBuilder itemBuilder = new StringBuilder();
+                    for (int i=0;i<testArr.length();i++) {
+                        itemBuilder.append(testArr.getJSONObject(i).getString("name"));
+                        if((i+1)!=testArr.length()) {
+                            itemBuilder.append(",");
+                        }
+                    }
+                    itemsToSave=itemBuilder.toString();
+
+                    SharedPreferences.Editor editObj = getApplicationContext().getSharedPreferences("MyPrefs",MODE_PRIVATE).edit();
+                    editObj.putString(listOfMenuItems.get(positionOfItems),itemsToSave);
+                    editObj.commit();
+
+                    positionOfItems++;
+
+                    urlConnection.disconnect();
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            return "Everything saved properly";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG,result);
+        }
     }
 }
