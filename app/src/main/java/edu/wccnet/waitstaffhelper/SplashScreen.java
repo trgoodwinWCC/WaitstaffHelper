@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -110,13 +111,12 @@ public class SplashScreen extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... urls) {
-            String itemsToSave;
             try {
-
                 for(String stringUrl : urls) {
                     if(listOfMenuItems.size()<urls.length) {
                         return "Error, names inputted do not match urls inputted";
                     }
+
                     URL url = new URL(stringUrl);
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -132,17 +132,17 @@ public class SplashScreen extends AppCompatActivity {
                     JSONObject topLevel = new JSONObject(builder.toString());
                     JSONArray testArr = topLevel.getJSONArray("items");
 
-                    StringBuilder itemBuilder = new StringBuilder();
+                    ArrayList<String> listOfSubItems = new ArrayList<>();
                     for (int i=0;i<testArr.length();i++) {
-                        itemBuilder.append(testArr.getJSONObject(i).getString("name"));
-                        if((i+1)!=testArr.length()) {
-                            itemBuilder.append(",");
-                        }
+                        listOfSubItems.add(testArr.getJSONObject(i).getString("name"));
                     }
-                    itemsToSave=itemBuilder.toString();
 
                     SharedPreferences.Editor editObj = getApplicationContext().getSharedPreferences("MyPrefs",MODE_PRIVATE).edit();
-                    editObj.putString(listOfMenuItems.get(positionOfItems),itemsToSave);
+                    editObj.putStringSet(listOfMenuItems.get(positionOfItems),new HashSet<String>(listOfSubItems));
+                    Log.i(TAG,"Item:"+listOfMenuItems.get(positionOfItems)+"\nList of all subitems:");
+                    for(String item:listOfSubItems) {
+                        Log.i(TAG,item);
+                    }
                     editObj.commit();
 
                     positionOfItems++;
