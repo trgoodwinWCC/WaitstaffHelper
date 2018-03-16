@@ -130,11 +130,11 @@ public class SplashScreen extends AppCompatActivity {
                     }
 
                     JSONObject topLevel = new JSONObject(builder.toString());
-                    JSONArray testArr = topLevel.getJSONArray("items");
+                    JSONArray itemsArray = topLevel.getJSONArray("items");
 
                     ArrayList<String> listOfSubItems = new ArrayList<>();
-                    for (int i=0;i<testArr.length();i++) {
-                        listOfSubItems.add(testArr.getJSONObject(i).getString("name"));
+                    for (int i=0;i<itemsArray.length();i++) {
+                        listOfSubItems.add(itemsArray.getJSONObject(i).getString("name"));
                     }
 
                     SharedPreferences.Editor editObj = getApplicationContext().getSharedPreferences("MyPrefs",MODE_PRIVATE).edit();
