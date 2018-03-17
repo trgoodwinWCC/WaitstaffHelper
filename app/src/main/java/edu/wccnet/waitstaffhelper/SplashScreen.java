@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -138,6 +139,7 @@ public class SplashScreen extends AppCompatActivity {
                     }
 
                     SharedPreferences.Editor editObj = getApplicationContext().getSharedPreferences("MyPrefs",MODE_PRIVATE).edit();
+                    editObj.putStringSet("Menu",new HashSet<String>(listOfMenuItems));
                     editObj.putStringSet(listOfMenuItems.get(positionOfItems),new HashSet<String>(listOfSubItems));
                     Log.i(TAG,"Item:"+listOfMenuItems.get(positionOfItems)+"\nList of all subitems:");
                     for(String item:listOfSubItems) {

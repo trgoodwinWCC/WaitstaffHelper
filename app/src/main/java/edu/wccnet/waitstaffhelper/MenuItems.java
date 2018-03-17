@@ -3,6 +3,15 @@ package edu.wccnet.waitstaffhelper;
 public class MenuItems {
     private String image;
     private String name;
+    private int size;
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 
     public String getImage() {
         return image;

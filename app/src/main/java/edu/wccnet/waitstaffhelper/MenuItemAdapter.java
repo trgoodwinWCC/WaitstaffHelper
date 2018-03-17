@@ -23,10 +23,8 @@ public class MenuItemAdapter extends ArrayAdapter<MenuItems>{
         ViewHolder holder;
 
         if(convertView==null){
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            // We are inflating the layout that we defined in car_item
             convertView = inflater.inflate(R.layout.menu_item,parent, false);
 
             holder = new ViewHolder();
@@ -46,7 +44,7 @@ public class MenuItemAdapter extends ArrayAdapter<MenuItems>{
 
             holder.text.setText( workingMenuItem.getName() );
             holder.image.setImageResource(
-                    convertView.getResources().getIdentifier(workingMenuItem.getImage(), "drawable", "edu.wccnet.customadapter"));
+                    convertView.getResources().getIdentifier(workingMenuItem.getImage(), "drawable", "edu.wccnet.waitstaffhelper"));
         }
         return convertView;
     }
