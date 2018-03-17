@@ -20,6 +20,9 @@
         <activity android:name=".LoginScreen">
 
         </activity>
+        <activity android:name=".CustomWaitstaffAdapter">
+
+        </activity>
     </application>
 
 </manifest>

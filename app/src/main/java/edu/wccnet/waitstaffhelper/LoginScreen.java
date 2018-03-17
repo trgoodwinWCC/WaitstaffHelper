@@ -1,8 +1,11 @@
 package edu.wccnet.waitstaffhelper;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -42,7 +45,7 @@ public class LoginScreen extends AppCompatActivity {
                 EditText editPassword=(EditText)findViewById(R.id.login_screen_et_password);
                 String password = editPassword.getText().toString();
                 if (!TextUtils.isEmpty(username)&&!TextUtils.isEmpty(password)) {
-                    RetrieveUserAndPass task = new RetrieveUserAndPass(username,password);
+                    RetrieveUserAndPass task = new RetrieveUserAndPass(username,password,LoginScreen.this);
                     task.execute("http://api.jsonbin.io/b/5a84a257a67185097468daa2");
                 }
                 else {
@@ -59,7 +62,7 @@ public class LoginScreen extends AppCompatActivity {
                 if (hasFocus) {
                     focusedEditUsername.setBackgroundColor(Color.WHITE);
                 } else {
-                    focusedEditUsername.setBackgroundColor(getResources().getColor(R.color.backgroundColorSplashScreen));
+                    focusedEditUsername.setBackgroundColor(ContextCompat.getColor(LoginScreen.this,R.color.backgroundColorSplashScreen));
                 }
             }
         });
@@ -70,28 +73,31 @@ public class LoginScreen extends AppCompatActivity {
                 if (hasFocus) {
                     focusedEditPassword.setBackgroundColor(Color.WHITE);
                 } else {
-                    focusedEditPassword.setBackgroundColor(getResources().getColor(R.color.backgroundColorSplashScreen));
+                    focusedEditUsername.setBackgroundColor(ContextCompat.getColor(LoginScreen.this,R.color.backgroundColorSplashScreen));
                 }
             }
         });
 
     }
 
-    private class RetrieveUserAndPass extends AsyncTask<String, Void, String> {
+    private class RetrieveUserAndPass extends AsyncTask<String, Void, Boolean> {
 
         private String usernameToCheck;
         private String passwordToCheck;
         private String foundPassword;
         private String foundUsername;
+        private String loginMessage="ERROR";
+        private Context context;
 
-        public RetrieveUserAndPass(String usernameToCheck,String passwordToCheck) {
+        public RetrieveUserAndPass(String usernameToCheck, String passwordToCheck, Context context) {
             this.usernameToCheck=usernameToCheck;
             this.passwordToCheck=passwordToCheck;
+            this.context=context.getApplicationContext();
         }
 
         @Override
-        protected String doInBackground(String... urls) {
-            String loginMessage="ERROR";
+        protected Boolean doInBackground(String... urls) {
+
             try {
                 URL url = new URL(urls[0]);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -122,16 +128,20 @@ public class LoginScreen extends AppCompatActivity {
             // the following is a bit long but shouldn't fail if json retrieval fails, instead it should run the else block
             if (android.text.TextUtils.equals(foundUsername, usernameToCheck) && android.text.TextUtils.equals(foundPassword, passwordToCheck)) {
                 loginMessage = "Logged in with:\nUsername:"+usernameToCheck+"\nPassword:"+foundPassword;
+                return true;
             }
             else {
                 loginMessage = "Username or password is incorrect";
+                return false;
             }
-            return loginMessage;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            Toast.makeText(LoginScreen.this, result, Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(Boolean result) {
+            Toast.makeText(LoginScreen.this, loginMessage, Toast.LENGTH_SHORT).show();
+            Intent activityStarter = new Intent(context,CustomWaitstaffAdapter.class);
+            Log.i(TAG,"Logged in, sending to CustomWaitstaffAdapter");
+            startActivity(activityStarter);
         }
 
     }

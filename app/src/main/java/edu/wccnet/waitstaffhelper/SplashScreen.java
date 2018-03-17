@@ -143,7 +143,7 @@ public class SplashScreen extends AppCompatActivity {
                     for(String item:listOfSubItems) {
                         Log.i(TAG,item);
                     }
-                    editObj.commit();
+                    editObj.apply();
 
                     positionOfItems++;
 
