@@ -23,6 +23,7 @@
         <activity android:name=".CustomWaitstaffAdapter">
 
         </activity>
+        <service android:name=".OrderSyncService" />
     </application>
 
 </manifest>
