@@ -6,12 +6,24 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -23,6 +35,7 @@ public class OrderSyncService extends IntentService {
         super("OrderSyncService" );
     }
 
+    private static final String TAG = OrderSyncService.class.getCanonicalName();
     private static final String channelDefaultID = "default";
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -35,14 +48,60 @@ public class OrderSyncService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         // Normally we would do some work here, like download a file.
-        final Runnable beeper = new Runnable() {
+        final Runnable checkForUpdate = new Runnable() {
             public void run() {
-                System.out.println("beep");
+                Log.i(TAG,"Beep");
                 // code to do json stuff here
+                int orderNumber;
+                String status;
+                try {
+                    URL url = new URL("https://jsonbin.io/5aca8021214f9a2b84c6e133");
+                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                    InputStream stream = new BufferedInputStream(urlConnection.getInputStream());
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
+                    StringBuilder builder = new StringBuilder();
+
+                    String inputString;
+                    while ((inputString = bufferedReader.readLine()) != null) {
+                        builder.append(inputString);
+                    }
+
+                    JSONObject overViewJSON = new JSONObject(builder.toString());
+
+                    Log.i(TAG,"getString('order') returns : "+overViewJSON.getString("order"));
+                    orderNumber = overViewJSON.getInt("order");
+                    Log.i(TAG,"getString('status') returns : "+overViewJSON.getString("status"));
+                    status = overViewJSON.getString("status");
+
+
+                    SharedPreferences readObj = getApplicationContext().getSharedPreferences("MyPrefs",MODE_PRIVATE);
+                    SharedPreferences.Editor editObj = getApplicationContext().getSharedPreferences("MyPrefs",MODE_PRIVATE).edit();
+
+                    if(readObj.getInt("Order",-1)!=orderNumber) {
+                        editObj.putInt("Order",orderNumber);
+                        editObj.putString("Status",status);
+                        editObj.putBoolean("Saved",false);
+                        editObj.apply();
+                        //notify here as a new order
+                    }
+                    else if (!readObj.getString(status,null).equals(status)) {
+                        editObj.putString("Status",status);
+                        editObj.apply();
+                        // notify update here
+                    }
+
+
+
+
+                    urlConnection.disconnect();
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
-        scheduler.scheduleWithFixedDelay(beeper, 1, 1, MINUTES);
+        scheduler.scheduleWithFixedDelay(checkForUpdate, 1, 1, MINUTES);
 
         //NotificationWorker.doBasicNotification(this, "Complete", "Finished with work!" ); do a headsupnotify instead
     }
@@ -79,7 +138,7 @@ public class OrderSyncService extends IntentService {
                 .setContentTitle(title)
                 .setContentText(message)
                 .setLargeIcon(largeIcon)
-                .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setColor(ContextCompat.getColor(context, R.color.backgroundColorSplashScreen))
                 .setAutoCancel(true);
 
         return myNotification;
