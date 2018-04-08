@@ -56,6 +56,8 @@ public class SplashScreen extends AppCompatActivity {
                 startActivity(secondActivityStarter);
             }
         });
+        Intent intent = new Intent(this, OrderSyncService.class);
+        startService(intent);
     }
 
     private class RetrieveVersion extends AsyncTask<String, Void, String> {
