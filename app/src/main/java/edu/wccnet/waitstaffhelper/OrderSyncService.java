@@ -93,7 +93,7 @@ public class OrderSyncService extends IntentService {
             }
         };
 
-        scheduler.scheduleWithFixedDelay(checkForUpdate, 20, 20, SECONDS);
+        scheduler.scheduleWithFixedDelay(checkForUpdate, 1, 1, MINUTES);
     }
 
     public void doHeadsUpNotification(Context context,String messageString) {
