@@ -126,7 +126,7 @@ public class LoginScreen extends AppCompatActivity {
                 e.printStackTrace();
             }
             // the following is a bit long but shouldn't fail if json retrieval fails, instead it should run the else block
-            if (android.text.TextUtils.equals(foundUsername, usernameToCheck) && android.text.TextUtils.equals(foundPassword, passwordToCheck)) {
+            if (TextUtils.equals(foundUsername, usernameToCheck) && TextUtils.equals(foundPassword, passwordToCheck)) {
                 loginMessage = "Logged in with:\nUsername:"+usernameToCheck+"\nPassword:"+foundPassword;
                 return true;
             }

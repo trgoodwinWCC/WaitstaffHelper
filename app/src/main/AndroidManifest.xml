@@ -27,6 +27,7 @@
 
         </activity>
         <service android:name=".OrderSyncService" />
+        <receiver android:name=".OrderReceiver"></receiver>
     </application>
 
 </manifest>

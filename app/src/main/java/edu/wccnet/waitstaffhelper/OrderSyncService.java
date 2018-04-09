@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -28,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 
 public class OrderSyncService extends IntentService {
@@ -39,23 +39,17 @@ public class OrderSyncService extends IntentService {
     private static final String channelDefaultID = "default";
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    /**
-     * The IntentService calls this method from the default worker thread with
-     * the intent that started the service. When this method returns, IntentService
-     * stops the service, as appropriate.
-     */
-
     @Override
     protected void onHandleIntent(Intent intent) {
-        // Normally we would do some work here, like download a file.
+
         final Runnable checkForUpdate = new Runnable() {
             public void run() {
-                Log.i(TAG,"Beep");
-                // code to do json stuff here
+                Log.i(TAG,"Ping");
+
                 int orderNumber;
                 String status;
                 try {
-                    URL url = new URL("https://jsonbin.io/5aca8021214f9a2b84c6e133");
+                    URL url = new URL("https://api.jsonbin.io/b/5aca8021214f9a2b84c6e133/latest");
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
                     InputStream stream = new BufferedInputStream(urlConnection.getInputStream());
@@ -74,67 +68,57 @@ public class OrderSyncService extends IntentService {
                     Log.i(TAG,"getString('status') returns : "+overViewJSON.getString("status"));
                     status = overViewJSON.getString("status");
 
-
                     SharedPreferences readObj = getApplicationContext().getSharedPreferences("MyPrefs",MODE_PRIVATE);
                     SharedPreferences.Editor editObj = getApplicationContext().getSharedPreferences("MyPrefs",MODE_PRIVATE).edit();
 
-                    if(readObj.getInt("Order",-1)!=orderNumber) {
+                    if(readObj.getBoolean("Saved",false)==false) {
                         editObj.putInt("Order",orderNumber);
                         editObj.putString("Status",status);
                         editObj.putBoolean("Saved",false);
                         editObj.apply();
                         //notify here as a new order
+                        Log.i(TAG,"New orderNumber, notify");
+                        doHeadsUpNotification(getApplicationContext(),"New orderNumber");
                     }
-                    else if (!readObj.getString(status,null).equals(status)) {
-                        editObj.putString("Status",status);
-                        editObj.apply();
-                        // notify update here
+                    else {
+                        Log.i(TAG,"No new order");
                     }
 
-
-
-
-                    urlConnection.disconnect();
+                    //urlConnection.disconnect();
+                    // for some reason it cannot reconnect if its closed. I wonder where to close it.
                 } catch (IOException | JSONException e) {
+                    Log.e(TAG,"Error from connection or json",e);
                     e.printStackTrace();
                 }
             }
         };
 
-        scheduler.scheduleWithFixedDelay(checkForUpdate, 1, 1, MINUTES);
-
-        //NotificationWorker.doBasicNotification(this, "Complete", "Finished with work!" ); do a headsupnotify instead
+        scheduler.scheduleWithFixedDelay(checkForUpdate, 20, 20, SECONDS);
     }
 
-    public static void doHeadsUpNotification(Context context) {
-        Intent callWCCIntent = new Intent(Intent.ACTION_DIAL);
-        Intent rightIntent = new Intent();
-        callWCCIntent.setData(Uri.parse("tel:7349733300"));
+    public void doHeadsUpNotification(Context context,String messageString) {
 
-        PendingIntent callWCC = PendingIntent.getActivity(context, 1,
-                callWCCIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        int id = 0;
 
-        NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(android.R.drawable.sym_action_call, "CALL WCC", callWCC).build();
+        Intent orderIntent = new Intent(context,OrderReceiver.class);
+        orderIntent.putExtra("ID",id);
 
-        NotificationCompat.Builder notificationBuilder = createNotificationBuilder(context, "Phone a friend", "This is a heads up notification, I suggest calling WCC");
+        PendingIntent notifyOrderReceiver = PendingIntent.getBroadcast(context, 1, orderIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(android.R.drawable.ic_menu_save, "SAVE DATA", notifyOrderReceiver).build();
+
+        NotificationCompat.Builder notificationBuilder = createNotificationBuilder(context, "Order Service", messageString);
         notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
         notificationBuilder.addAction(replyAction);
 
-        doNotification(context, notificationBuilder.build(), 0);
+        doNotification(context, notificationBuilder.build(), id);
     }
 
     private static NotificationCompat.Builder createNotificationBuilder(Context context, String title, String message) {
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.waitstaff_helper);
         NotificationCompat.Builder myNotification = new NotificationCompat.Builder(context, channelDefaultID);
 
-        // You'll need to update the minimum SDK version to see this working properly, you'll also
-        // need to run in an emulator that supports at least API level 26
-        //CharSequence channelName = "Default Channel";
-        //int importance = NotificationManager.IMPORTANCE_LOW;
-        //NotificationChannel notificationChannel = new NotificationChannel(channelDefaultID, channelName, importance);
-        //notificationChannel.setLightColor(Color.RED);
-
-        myNotification.setSmallIcon(R.drawable.waitstaff_helper)
+        myNotification.setSmallIcon(R.drawable.dinner)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setLargeIcon(largeIcon)
@@ -149,35 +133,5 @@ public class OrderSyncService extends IntentService {
         NotificationManager myManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         myManager.notify(id, notification);
     }
-
-/*    class BeeperControl {
-        private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        public void beepForAnHour() {
-
-            final Runnable beeper = new Runnable() {
-                public void run() {
-                    System.out.println("beep");
-                    // code to do stuff here
-                }
-            };
-
-            scheduler.scheduleAtFixedRate(beeper, 10, 10, SECONDS); // put the runnable code plus time here.
-
-            *//*
-            the following code is the same as above but is cancelled when the new schedule executes.
-
-            final ScheduledFuture<?> beeperHandle = scheduler.scheduleAtFixedRate(beeper, 10, 10, SECONDS);
-
-            scheduler.schedule(new Runnable() {
-                public void run() {
-                    beeperHandle.cancel(true);
-                }
-            }, 60 * 60, SECONDS);
-            *//*
-
-        }
-    }*/
-
 
 }
