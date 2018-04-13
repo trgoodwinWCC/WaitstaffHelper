@@ -23,11 +23,17 @@
         <activity android:name=".LoginScreen">
 
         </activity>
-        <activity android:name=".CustomWaitstaffAdapter">
+        <activity android:name=".WaitstaffAdapterScreen">
 
         </activity>
-        <service android:name=".OrderSyncService" />
-        <receiver android:name=".OrderReceiver"></receiver>
+        <activity android:name=".WaitstaffAdapterSubScreen">
+
+        </activity>
+        <activity android:name=".MainMenuScreen">
+
+        </activity>
+        <service android:name=".OrderService.OrderSyncService" />
+        <receiver android:name=".OrderService.OrderReceiver"></receiver>
     </application>
 
 </manifest>

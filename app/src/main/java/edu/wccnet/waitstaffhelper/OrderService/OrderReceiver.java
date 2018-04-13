@@ -1,4 +1,4 @@
-package edu.wccnet.waitstaffhelper;
+package edu.wccnet.waitstaffhelper.OrderService;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;

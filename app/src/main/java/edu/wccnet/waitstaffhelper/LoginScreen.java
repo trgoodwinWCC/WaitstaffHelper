@@ -139,9 +139,11 @@ public class LoginScreen extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             Toast.makeText(LoginScreen.this, loginMessage, Toast.LENGTH_SHORT).show();
-            Intent activityStarter = new Intent(context,CustomWaitstaffAdapter.class);
-            Log.i(TAG,"Logged in, sending to CustomWaitstaffAdapter");
-            startActivity(activityStarter);
+            if(result) {
+                Intent activityStarter = new Intent(context, MainMenuScreen.class);
+                Log.i(TAG, "Logged in, sending to MainMenuScreen");
+                startActivity(activityStarter);
+            }
         }
 
     }

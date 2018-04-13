@@ -1,4 +1,4 @@
-package edu.wccnet.waitstaffhelper;
+package edu.wccnet.waitstaffhelper.OrderService;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -26,8 +26,9 @@ import java.net.URL;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import edu.wccnet.waitstaffhelper.R;
+
 import static java.util.concurrent.TimeUnit.MINUTES;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 
 public class OrderSyncService extends IntentService {
@@ -83,6 +84,7 @@ public class OrderSyncService extends IntentService {
                     else {
                         Log.i(TAG,"No new order");
                     }
+
 
                     //urlConnection.disconnect();
                     // for some reason it cannot reconnect if its closed. I wonder where to close it.

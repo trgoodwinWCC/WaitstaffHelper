@@ -1,4 +1,4 @@
-package edu.wccnet.waitstaffhelper;
+package edu.wccnet.waitstaffhelper.MenuAdapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
+
+import edu.wccnet.waitstaffhelper.R;
 
 public class MenuItemAdapter extends ArrayAdapter<MenuItems>{
     private ArrayList<MenuItems> menuItemsArrayList;

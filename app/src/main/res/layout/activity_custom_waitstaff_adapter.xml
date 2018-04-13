@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.wccnet.waitstaffhelper.CustomWaitstaffAdapter"
+    tools:context="edu.wccnet.waitstaffhelper.WaitstaffAdapterScreen"
     tools:layout_editor_absoluteY="73dp"
     tools:showIn="@layout/activity_custom_waitstaff_adapter">
 

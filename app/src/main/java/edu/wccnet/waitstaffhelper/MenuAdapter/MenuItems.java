@@ -1,4 +1,4 @@
-package edu.wccnet.waitstaffhelper;
+package edu.wccnet.waitstaffhelper.MenuAdapter;
 
 public class MenuItems {
     private String image;
