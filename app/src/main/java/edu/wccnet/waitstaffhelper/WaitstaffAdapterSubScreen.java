@@ -23,6 +23,8 @@ public class WaitstaffAdapterSubScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waitstaff_subscreen);
 
+
+
         /*
         final ListView listview = (ListView)findViewById(R.id.subMenuListView);
         final ArrayList<MenuItems> menuItemsArray = new ArrayList<MenuItems>();
