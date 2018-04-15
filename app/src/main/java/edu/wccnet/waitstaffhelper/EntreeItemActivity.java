@@ -3,7 +3,11 @@ package edu.wccnet.waitstaffhelper;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 public class EntreeItemActivity extends AppCompatActivity {
 
@@ -17,8 +21,10 @@ public class EntreeItemActivity extends AppCompatActivity {
         TextView itemPrice = (TextView)findViewById(R.id.itemPriceText);
         itemName.setText(item.getname());
         itemPrice.setText(item.getprice());
-        // load image using Glide
-        // https://github.com/bumptech/glide
-        //@TODO Fix to use all items and load the image.
+
+        ImageView imageView = (ImageView) findViewById(R.id.itemImage);
+
+        RequestOptions options = new RequestOptions().fitCenter().placeholder(R.drawable.lunch).error(R.drawable.dinner);
+        Glide.with(this).load(item.getimageUrl()).apply(options).into(imageView);
     }
 }
