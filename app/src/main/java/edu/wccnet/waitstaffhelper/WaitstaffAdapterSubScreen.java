@@ -71,7 +71,7 @@ public class WaitstaffAdapterSubScreen extends AppCompatActivity {
             public EntreeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 // Create a new instance of the ViewHolder, in this case we are using a custom
                 // layout called R.layout.message for each item
-                // replace message with my own layout for the item.
+                // replaced message with my own layout for the item.
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.entree_item, parent, false);
                 return new EntreeViewHolder(view);
             }
@@ -81,6 +81,8 @@ public class WaitstaffAdapterSubScreen extends AppCompatActivity {
                 // Bind the model object to the Holder
                 // ...
                 holder.assignModelClass(model);
+                // I passed the class into the holder.
+                // the holder has a OnClickListener to start the detail view.
                 holder.eTextView.setText(model.getname());
 
             }

@@ -17,5 +17,8 @@ public class EntreeItemActivity extends AppCompatActivity {
         TextView itemPrice = (TextView)findViewById(R.id.itemPriceText);
         itemName.setText(item.getname());
         itemPrice.setText(item.getprice());
+        // load image using Glide
+        // https://github.com/bumptech/glide
+        //@TODO Fix to use all items and load the image.
     }
 }
