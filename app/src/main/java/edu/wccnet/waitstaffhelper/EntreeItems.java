@@ -5,35 +5,35 @@ public class EntreeItems {
     private String eItemPrice;
     private String eItemUrl;
 
-    public EntreeItems() {} //Needed for firebase
+    private EntreeItems() {} //Needed for firebase
 
-    public EntreeItems(String eItemName, String eItemPrice, String eItemUrl) {
-        this.eItemName = eItemName;
-        this.eItemPrice = eItemPrice;
-        this.eItemUrl = eItemUrl;
+    public EntreeItems(String name, String price, String imageUrl) {
+        this.eItemName = name;
+        this.eItemPrice = price;
+        this.eItemUrl = imageUrl;
     }
 
-    public String geteItemName() {
+    public String getname() {
         return eItemName;
     }
 
-    public void seteItemName(String eItemName) {
-        this.eItemName = eItemName;
+    public void setname(String name) {
+        this.eItemName = name;
     }
 
-    public String geteItemPrice() {
+    public String getprice() {
         return eItemPrice;
     }
 
-    public void seteItemPrice(String eItemPrice) {
-        this.eItemPrice = eItemPrice;
+    public void setprice(String price) {
+        this.eItemPrice = price;
     }
 
-    public String geteItemUrl() {
+    public String getimageUrl() {
         return eItemUrl;
     }
 
-    public void seteItemUrl(String eItemUrl) {
-        this.eItemUrl = eItemUrl;
+    public void setimageUrl(String imageUrl) {
+        this.eItemUrl = imageUrl;
     }
 }
