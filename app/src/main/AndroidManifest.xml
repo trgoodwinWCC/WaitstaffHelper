@@ -2,10 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.wccnet.waitstaffhelper">
 
-    <uses-sdk android:minSdkVersion="21"
-        android:targetSdkVersion="26"
-        android:maxSdkVersion="28" />
+    <uses-sdk
+        android:maxSdkVersion="28"
+        android:minSdkVersion="21"
+        android:targetSdkVersion="26" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,20 +26,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginScreen">
+        <activity android:name=".LoginScreen"></activity>
+        <activity android:name=".WaitstaffAdapterScreen"></activity>
+        <activity android:name=".WaitstaffAdapterSubScreen"></activity>
+        <activity android:name=".MainMenuScreen"></activity>
 
-        </activity>
-        <activity android:name=".WaitstaffAdapterScreen">
-
-        </activity>
-        <activity android:name=".WaitstaffAdapterSubScreen">
-
-        </activity>
-        <activity android:name=".MainMenuScreen">
-
-        </activity>
         <service android:name=".OrderService.OrderSyncService" />
-        <receiver android:name=".OrderService.OrderReceiver"></receiver>
+
+        <receiver android:name=".OrderService.OrderReceiver" />
+
+        <activity android:name=".EntreeItemActivity"></activity>
     </application>
 
 </manifest>

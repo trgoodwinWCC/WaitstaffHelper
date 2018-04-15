@@ -1,6 +1,8 @@
 package edu.wccnet.waitstaffhelper;
 
-public class EntreeItems {
+import java.io.Serializable;
+
+public class EntreeItems implements Serializable{
     private String eItemName;
     private String eItemPrice;
     private String eItemUrl;

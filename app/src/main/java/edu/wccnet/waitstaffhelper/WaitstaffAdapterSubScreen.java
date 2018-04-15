@@ -1,5 +1,7 @@
 package edu.wccnet.waitstaffhelper;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -26,11 +29,29 @@ public class WaitstaffAdapterSubScreen extends AppCompatActivity {
 
     public static class EntreeViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        EntreeItems testModel;
         public TextView eTextView;
         public EntreeViewHolder(View v) {
             super(v);
             eTextView = v.findViewById(R.id.entree_model);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(testModel!=null) {
+                        Log.i(TAG,"Testing onclick and model is not null");
+                        Intent intentTest = new Intent(view.getContext(),EntreeItemActivity.class);
+                        intentTest.putExtra("EntreeItem",testModel);
+                        view.getContext().startActivity(intentTest);
+                    }
+
+                    Log.i(TAG,"Testing "+eTextView.getText());
+                }
+            });
         }
+        public void assignModelClass(EntreeItems model) {
+            testModel=model;
+        }
+
     }
 
     @Override
@@ -52,7 +73,6 @@ public class WaitstaffAdapterSubScreen extends AppCompatActivity {
                 // layout called R.layout.message for each item
                 // replace message with my own layout for the item.
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.entree_item, parent, false);
-
                 return new EntreeViewHolder(view);
             }
 
@@ -60,6 +80,7 @@ public class WaitstaffAdapterSubScreen extends AppCompatActivity {
             protected void onBindViewHolder(EntreeViewHolder holder, int position, EntreeItems model) {
                 // Bind the model object to the Holder
                 // ...
+                holder.assignModelClass(model);
                 holder.eTextView.setText(model.getname());
 
             }
@@ -83,6 +104,9 @@ public class WaitstaffAdapterSubScreen extends AppCompatActivity {
         entreeRecyclerView.setLayoutManager(entreeLayoutManager);
         entreeRecyclerView.setAdapter(adapter);
 
+        /*
+        Note: you need to download my project's firebase json from the online console and put it the project/app folder otherwise it will not build.
+         */
 
     }
 
