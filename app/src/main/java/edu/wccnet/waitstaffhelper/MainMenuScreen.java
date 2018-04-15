@@ -23,8 +23,8 @@ public class MainMenuScreen extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                Intent entreeActivityStarter = new Intent(view.getContext(),WaitstaffAdapterSubScreen.class);
-                Log.i(TAG,"Entreebutton clicked, sending to WaitstaffAdapterSubScreen");
+                Intent entreeActivityStarter = new Intent(view.getContext(),EntreeAdapterScreen.class);
+                Log.i(TAG,"Entreebutton clicked, sending to EntreeAdapterScreen");
                 startActivity(entreeActivityStarter);
             }
         });

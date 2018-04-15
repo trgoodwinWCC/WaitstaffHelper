@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "91247369989",
+    "firebase_url": "https://waitstaffhelper.firebaseio.com",
+    "project_id": "waitstaffhelper",
+    "storage_bucket": "waitstaffhelper.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91247369989:android:4014ca69e78bea56",
+        "android_client_info": {
+          "package_name": "edu.wccnet.waitstaffhelper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91247369989-bfhvlne8ksua3lueo65kqqi04cpd55n8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.wccnet.waitstaffhelper",
+            "certificate_hash": "9ef07fd3226b1cad6b61c8d737a0a08196d68244"
+          }
+        },
+        {
+          "client_id": "91247369989-2rqt8mirphu2rkn1qaahinlqu3sgbgos.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg32LbFjWS99aesCOfEWosexKIImjhpOQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91247369989-2rqt8mirphu2rkn1qaahinlqu3sgbgos.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

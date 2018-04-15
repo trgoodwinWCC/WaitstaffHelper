@@ -14,9 +14,9 @@ public class EntreeItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_entree_item);
+        setContentView(R.layout.activity_entree_item_screen);
         Intent intent = getIntent();
-        EntreeItems item = (EntreeItems)intent.getSerializableExtra("EntreeItem");
+        EntreeItemsBean item = (EntreeItemsBean)intent.getSerializableExtra("EntreeItem");
         TextView itemName = (TextView)findViewById(R.id.itemName);
         TextView itemPrice = (TextView)findViewById(R.id.itemPriceText);
         itemName.setText(item.getname());

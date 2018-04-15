@@ -2,14 +2,14 @@ package edu.wccnet.waitstaffhelper;
 
 import java.io.Serializable;
 
-public class EntreeItems implements Serializable{
+public class EntreeItemsBean implements Serializable{
     private String eItemName;
     private String eItemPrice;
     private String eItemUrl;
 
-    private EntreeItems() {} //Needed for firebase
+    private EntreeItemsBean() {} //Needed for firebase
 
-    public EntreeItems(String name, String price, String imageUrl) {
+    public EntreeItemsBean(String name, String price, String imageUrl) {
         this.eItemName = name;
         this.eItemPrice = price;
         this.eItemUrl = imageUrl;
