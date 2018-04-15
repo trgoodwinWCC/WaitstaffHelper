@@ -2,6 +2,7 @@ package edu.wccnet.waitstaffhelper;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -78,6 +79,7 @@ public class WaitstaffAdapterSubScreen extends AppCompatActivity {
 
         // use a linear layout manager
         entreeLayoutManager = new LinearLayoutManager(this);
+        entreeRecyclerView.addItemDecoration(new DividerItemDecoration(WaitstaffAdapterSubScreen.this, DividerItemDecoration.VERTICAL));
         entreeRecyclerView.setLayoutManager(entreeLayoutManager);
         entreeRecyclerView.setAdapter(adapter);
 
