@@ -54,7 +54,7 @@ public class EntreeAdapterScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waitstaff_subscreen);
 
-        Query query = FirebaseDatabase.getInstance().getReference("Entrees").limitToLast(10);
+        Query query = FirebaseDatabase.getInstance().getReference("Entrees").limitToLast(50);
 
         FirebaseRecyclerOptions<EntreeItemsBean> options = new FirebaseRecyclerOptions.Builder<EntreeItemsBean>().setQuery(query, EntreeItemsBean.class).build();
 
@@ -87,10 +87,13 @@ public class EntreeAdapterScreen extends AppCompatActivity {
         // in content do not change the layout size of the RecyclerView
         entreeRecyclerView.setHasFixedSize(true);
 
+
         entreeLayoutManager = new LinearLayoutManager(this);
+
         entreeRecyclerView.addItemDecoration(new DividerItemDecoration(EntreeAdapterScreen.this, DividerItemDecoration.VERTICAL));
         entreeRecyclerView.setLayoutManager(entreeLayoutManager);
         entreeRecyclerView.setAdapter(adapter);
+
 
         // Note: you need may to download my project's firebase metadata as json from the online console and put it the /project/app folder otherwise it will not build.
     }
